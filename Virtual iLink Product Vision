@@ -1,0 +1,86 @@
+# Product Vision — iLink Ultra Virtualization
+
+## 1. Overview
+
+The iLink Ultra Virtualization product is a software-defined platform that replaces legacy physical iLink Ultra hardware with a virtualized in-site instance. It preserves core site controller and ticket validation functionality while removing hardware sourcing risk, simplifying deployment, and enabling more efficient operations. This solution is designed to address the market gap created by aging iLink Ultra devices and to support regulated gaming environments with a modern, scalable infrastructure approach.
+
+## 2. Business Overview
+
+The current iLink Ultra deployment model depends on specialized physical hardware that is increasingly difficult to source and maintain. Operators face long lead times, expensive field service, and growing risk as the hardware reaches end of life. At the same time, gaming operators are moving toward software-defined infrastructure to reduce costs, improve resilience, and enable faster updates.
+
+This virtualization initiative meets customer needs for a sustainable replacement path that preserves existing gaming floor workflows and device compatibility. It supports the existing business flow of EGM-to-site controller communication, ticket validation, session management, and local event handling while shifting the implementation from bespoke physical units to approved virtualized hosts. The result is lower infrastructure cost, faster provisioning, better monitoring, and improved business continuity for regulators and operators alike.
+
+## 3. Business Objective
+
+This product aims to:
+- remove the long-term hardware dependency created by the legacy iLink Ultra physical device,
+- provide an in-site virtualized replacement that supports existing ticket validation and site controller services,
+- reduce deployment time, field service cost, and hardware lifecycle risk,
+- enable scalable growth by allowing more flexible capacity management in gaming locations,
+- preserve regulatory and security compliance in approved virtualized environments,
+- improve operational resilience with centralized management, health monitoring, and recoverability.
+
+## 4. Process Model Diagrams
+
+```mermaid
+flowchart TD
+  A[EGM / Gaming Machine] -->|Site controller traffic| B[Virtualized iLink Ultra Instance]
+  B --> C[In-site Host / Hypervisor]
+  B --> D[Backend Systems]
+  B --> E[Monitoring & Health Service]
+  D --> F[Ticket Validation / Accounting]
+  E --> G[Operator Dashboard / Alerts]
+  C --> H[Failover / Recovery]
+```
+
+## 5. Scope
+
+### 5.1 Included in Scope
+
+- Virtualized iLink Ultra instance hosting the core iLink protocol stack and site controller behavior
+- Deployment on approved in-site virtualization hosts/hypervisors
+- Integration with existing EGMs and casino network infrastructure
+- Maintenance of existing ticket validation, session management, and event exchange flows
+- Migration support for existing physical iLink Ultra configurations
+- Operational health monitoring and alerting for the virtual instance
+- Recovery patterns for virtual instance restart and failover
+- Support for secure communication and compliance controls required by regulated gaming venues
+
+### 5.2 Excluded from Scope
+
+- Any mobile validator or handheld UI solution
+- New customer-facing mobile or tablet validation features
+- Changes to primary ticket validation business rules or EGM transaction logic
+- Cloud-hosted or external hosting models outside approved in-site virtualization
+- Full replacement of legacy hardware with new non-virtualized physical devices
+- Non-iLink virtualization initiatives unrelated to the iLink Ultra platform
+
+## 6. Assumptions
+
+- Venue infrastructure supports the approved virtualization host and secure in-site deployment model
+- Regulated jurisdictions permit virtualized site controller deployment when security and isolation controls are met
+- Existing EGMs and backend systems can communicate with the virtualized instance using the current iLink protocol
+- The virtualization platform delivers required performance, latency, and reliability for gaming floor operations
+- Migration of current physical iLink Ultra configurations to virtual instances is technically feasible
+- Monitoring and alerting for virtual instance health can be integrated into existing operations tools
+
+## 7. Constraints
+
+### Business Constraints
+
+- Solution must comply with gaming jurisdiction rules for virtualization, secure hosting, and validated device behavior
+- Operational behavior and access controls must remain consistent with audited validation requirements
+- Deployment must preserve regulatory evidence requirements for ticket validation and device management
+
+### Technical Constraints
+
+- Virtualized platform must meet real-time and latency needs of EGM and site controller communication
+- Redundant virtual instances cannot violate host isolation rules (for example, not running redundant instances on the same hypervisor where prohibited)
+- Network segmentation and secure connectivity must be preserved for the virtualized iLink instance
+- The virtual solution depends on stable backend availability for ticket processing and event synchronization
+
+### Regulatory Constraints
+
+- Must respect virtualization-related requirements such as those in GLI guidance for secure host isolation
+- Must avoid virtualization approaches that could be interpreted as remote desktop or circumvention of location detection
+- Must ensure the virtualized instance can be audited and certified in each applicable jurisdiction
