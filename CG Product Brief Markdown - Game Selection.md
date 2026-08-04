@@ -1,0 +1,391 @@
+**North Dakota Charitable Gaming**
+
+**Quarterly Game Selection \& Configuration**
+
+*Product Brief \& High-Level Functional Specification for Requirements Team*
+
+|**Field**|**Value**|
+|-|-|
+|Classification|Confidential - Internal Product Planning|
+|Audience|Requirements Team, Product, Architecture, Compliance, Studio / Game Package Administration, Ticket Pools, Reporting, EVO, ILink, Operations|
+|Version|1.0 - Final Draft for Review|
+|Purpose|Provide Product direction and high-level functional requirements for Quarterly Game Selection \& Configuration. This document is not a complete field-level or technical design specification.|
+
+## How to use this brief
+
+This document translates Product intent into a requirements handoff and high-level functional specification. The Requirements team should use it to create formal business requirements, system requirements, acceptance criteria, workflow requirements, validation rules, metadata contracts, integration requirements, audit requirements, exception behavior, and traceability.
+
+# 1\. Purpose
+
+This brief defines the Product intent for the North Dakota Quarterly Game Selection \& Configuration workflow.
+
+The goal is to give charities a simple, compliant, self-service experience for preparing, validating, confirming, and activating approved next-quarter game configurations while ensuring EVO, Ticket Pools, ILink, EGMs, reporting, and compliance workflows receive the correct downstream configuration data.
+
+# 2\. Product Intent
+
+EVO should be the guided workflow layer that allows a charity to prepare its next-quarter game configuration by site. The charity may prepare, save, and revise selections at any time during the current quarter without affecting the active quarter.
+
+After the prior quarter has been successfully closed, EVO should present the most recently saved configuration for final validation and acknowledgement. The charity should then perform one Activate Next Quarter action. EVO, Ticket Pools, ILink, and downstream systems should manage game-package resolution, initial deal preparation, download, configuration, and activation in the background.
+
+### Product principle
+
+The charity should make the business selections and complete the workflow through a small number of clear actions. EVO, Ticket Pools, ILink, and the EGMs should manage the technical sequencing and execution in the background.
+
+# 3\. Strategic / Product Context
+
+North Dakota charitable gaming requires the organization to independently select permitted game titles, Cost Per Play values, payout percentages, and top-prize options without being directed by the manufacturer or distributor. The workflow must remain charity-led while preventing invalid or unavailable combinations from reaching downstream systems.
+
+The IGT product opportunity is to provide a guided, user-friendly, compliant, and audit-ready experience that hides technical complexity from the charity while producing the validated configuration required by Ticket Pools, ILink, EGMs, reporting, and quarter-transition workflows.
+
+Market examples may inform familiar workflow patterns, but competitor portals, branding, proprietary artwork, and vendor-specific screen designs must not be copied.
+
+# 4\. Source-of-Truth Ownership and Primary Users
+
+|**Domain / Actor**|**Product Direction**|
+|-|-|
+|EVO|Owns the charity-facing selection workflow, draft configuration, validation presentation, configuration history, final acknowledgement, and activation orchestration.|
+|Game Catalog / Game Package Administration|Owns approved game metadata, graphics, cabinet compatibility, Cost Per Play, payout, top-prize, certification, effective-date, and availability information.|
+|Ticket Pools / EVO Host|Resolves the validated selection to approved Math Definition Files and eligible initial deal inventory.|
+|ILink / Site Controller|Receives the approved activation configuration, downloads and initializes games and deals, configures eligible EGMs, and reports activation results.|
+|EGM|Displays only the games and configurations activated by ILink. It does not determine configuration eligibility, deal selection, or outcome order.|
+|Reporting|Uses active and historical configuration state for prescribed reports, reconciliation, performance history, and audit.|
+|Compliance / Regulator|Requires traceability of selection, validation, acknowledgement, activation, and historical configuration state.|
+
+|**User / Role**|**Product Role**|
+|-|-|
+|Charity / Organization Employee|Primary user. Prepares, saves, validates, acknowledges, and activates the next-quarter configuration for authorized sites.|
+|Distributor / Support User|May provide approved operational support or visibility within authorized charity and site boundaries, subject to Product and Compliance permissions.|
+|IGT Support / Admin|Supports metadata, validation, download, activation, and exception recovery. Elevated actions must be permission-controlled and audited.|
+|Studio / Game Package Administration|Maintains approved game-package metadata, configuration availability, cabinet compatibility, and related controlled content.|
+|Compliance / Regulator Read-Only User|May review approved selection history, validation status, activation history, and audit records. No operational changes are permitted.|
+
+# 5\. MVP Product Scope
+
+The MVP should support the complete user journey from next-quarter draft preparation through final validation and one-action activation. Draft preparation occurs in parallel with the active quarter and does not affect current gameplay until activation is confirmed.
+
+## 5.1 Role-Based Charity, Site, and Quarter Access
+
+EVO should establish the charity context from the authenticated user and display only sites the user is authorized to manage. The charity should not normally select an organization unless the user is explicitly authorized for more than one charity.
+
+|**Role**|**Organization Context**|**Site Access**|**Primary Mode**|
+|-|-|-|-|
+|Charity user|Automatically established unless authorized for multiple charities|Authorized sites only|Selection, confirmation, and activation|
+|Regulator|Search/select authorized charities|Sites under selected charity|Read-only oversight|
+|IGT support/admin|Permitted charities|Sites within support scope|Support and controlled administration|
+
+## 5.2 Quarterly Game Selection Dashboard
+
+The dashboard should show the current active quarter, next-quarter draft status, completed selection activities, validation status, final-review readiness, activation status, blockers, and the next required action. Historical configurations and activation results should remain accessible to authorized users.
+
+* Keep future actions visible but unavailable until prerequisites are satisfied.
+* Use clear statuses such as Not Started, Draft, Saved, Incomplete, Validation Required, Ready for Final Review, Confirmed, Pending Activation, Activating, Active, Partially Activated, Blocked, Failed, and Superseded.
+* Explain why a configuration or action is blocked and provide a direct path to correction.
+* Make the next required charity action obvious without requiring the user to understand downstream technical processes.
+
+## 5.3 Visual Game Catalog
+
+EVO should display a visual catalog of approved games available for the selected site and upcoming quarter. New games should be clearly identified and may be placed near the top of the catalog.
+
+* Game title and approved graphic or logo.
+* Supported cabinet layouts and device population.
+* Available Cost Per Play, payout, and top-prize options.
+* Approval, certification, effective-date, and availability status.
+* New, returning, or previously active indicator.
+* Approved closed-quarter performance information where available.
+* Direct access to an information or brochure-style detail view.
+
+EVO must not expose Math Definition File names, internal game-form IDs, paytable IDs, package-routing identifiers, deal inventory, or active-pool information to charity users.
+
+## 5.4 Game Information View
+
+Selecting the game graphic or information control should open a connected game-information experience driven by approved game-package metadata. The view may include the game theme, feature summary, cabinet support, available Cost Per Play, payout, top-prize options, new-game indicator, and approved prior-quarter performance information.
+
+## 5.5 Valid Options Only
+
+EVO must derive visible configuration options from approved, enabled, certified, and currently available game-package data. A configuration must be valid for the selected jurisdiction, site, quarter, cabinet layout, game version, Cost Per Play, payout, and top-prize combination before it is presented as selectable.
+
+A configuration validly activated for the current quarter must remain visible, reportable, and closable through quarter end even if it is later disabled for future selection. Disabling future availability must not remove or alter the active-quarter configuration record.
+
+## 5.6 Game, Cost Per Play, Payout, and Top-Prize Selection
+
+After selecting a game, the charity should select one or more approved Cost Per Play values and any permitted payout or top-prize options. EVO should display only configuration choices that require a charity decision. Where a value is fixed by the approved configuration, EVO should display the fixed value as read-only rather than presenting an inactive selection control.
+
+* Allow one approved payout to be applied across selected Cost Per Play values where supported.
+* Allow Cost Per Play-specific payout selection where approved.
+* Display top-prize choices only when a valid charity choice exists.
+* Prevent unsupported combinations before they can be saved as ready for final review.
+
+## 5.7 Game Count and Site Capacity
+
+EVO should display a clear selection count and enforce applicable game-count, menu-capacity, cabinet-layout, site, jurisdiction, and Product limits. Numeric examples such as “8 of 12 games selected” are illustrative and must not be treated as a fixed North Dakota limit unless formally approved.
+
+## 5.8 Prior-Quarter Baseline Configuration
+
+EVO should allow the charity to create a next-quarter draft from the most recently activated configuration for the selected site. The copied configuration must be revalidated against current game availability, certification, cabinet compatibility, and approved configuration options before it is treated as valid for the next quarter.
+
+## 5.9 Prior-Quarter Performance Display
+
+EVO may display approved closed-quarter performance indicators to support charity decision-making. The metric definition must be formally approved and may include share of total play or another approved measure.
+
+Performance information must use closed-quarter data only and must not expose active-quarter deal depletion, tickets sold, unsold tickets, remaining prizes, future outcomes, or restricted inventory information.
+
+## 5.10 Site-Level Configuration and Copying
+
+The standard North Dakota workflow should apply one validated IGT game configuration to the applicable IGT EGMs at the selected site. The charity should not normally assign games terminal by terminal.
+
+Where copying is supported, EVO may allow the charity to copy a draft from another authorized site or from a prior activated configuration. Every copied selection must be independently revalidated against the target site, cabinet population, layout, jurisdiction, and current availability.
+
+## 5.11 Validation and Error Handling
+
+|**Validation Category**|**Examples**|
+|-|-|
+|Selection completeness|No games selected; missing Cost Per Play; required payout or top prize missing; game-count limit exceeded.|
+|Compatibility|Cabinet-layout mismatch; unsupported site/device population; copied configuration incompatible with target site.|
+|Approval and availability|Game disabled; certification expired; package replaced; Cost Per Play or payout no longer approved; configuration unavailable for the next quarter.|
+|Downstream readiness|Required deal inventory unavailable; package download unavailable; ILink not ready; EGM configuration conflict.|
+
+Validation messages should appear close to the affected game or field and should explain what happened, why it matters, and the direct action required. Selection and configuration errors must prevent final acknowledgement. Operational readiness issues, such as unavailable deal inventory or temporary site connectivity, may permit final acknowledgement but must prevent activation until resolved, subject to the final approved requirements.
+
+## 5.12 Draft Save and Configuration History
+
+The charity may save and revise its next-quarter game configuration at any time during the active quarter. Saving a draft does not affect the active quarter, initiate downloads, generate deals, or configure EGMs.
+
+EVO must preserve configuration history, including user, timestamp, prior and resulting selections, validation status, and any copied baseline.
+
+## 5.13 Final Validation and Acknowledgement
+
+After the prior quarter has been successfully closed, EVO must present the most recently saved next-quarter configuration for final review. EVO must revalidate every selected game, Cost Per Play, payout, top-prize option, cabinet compatibility, certification, approval, and current availability.
+
+If the charity has made no selection, or if any saved selection is incomplete or invalid, EVO must identify the issue and provide a direct path to correct it. The charity must provide one final acknowledgement confirming that the validated configuration represents its intended next-quarter selection.
+
+> \*\*No-selection handling:\*\* If the charity has not selected any games, EVO must clearly identify that the next-quarter configuration is incomplete, provide a direct path to the game catalog, and prevent final acknowledgement and activation until at least one valid game and Cost Per Play configuration has been selected.
+
+## 5.14 One-Action Next-Quarter Activation
+
+After final acknowledgement, the charity should select one Activate Next Quarter action. The charity should not be required to perform separate game-package, deal, download, ILink, or EGM configuration steps.
+
+|**System Activity**|**Expected Behavior**|
+|-|-|
+|Configuration lock|Lock and retain the confirmed activation configuration version.|
+|Game-package resolution|Resolve each selection to the approved game package, Math Definition File, and technical configuration.|
+|Deal preparation|Prepare, generate where required, or assign the eligible initial deals for each valid selected configuration.|
+|Download and initialization|Download game and deal content, initialize the required active pools, and configure ILink.|
+|EGM configuration and activation|Configure applicable EGMs and activate eligible games and devices.|
+|Result and audit|Record the operational activation timestamp and report success, partial completion, blocked status, or failure.|
+
+## 5.15 Quarter-Transition Timing
+
+The charity may prepare and save game selections throughout the current quarter. The permitted 14-day transition window governs when the charity may operationally close the current quarter and begin the next regulatory quarter; it does not limit when draft selections may be created.
+
+Next-quarter activation may occur only after the prior quarter has been successfully closed and the saved configuration has passed final validation and acknowledgement. EVO must preserve both the regulatory quarter and the actual activation timestamp.
+
+## 5.16 Audit Trail and Configuration Retention
+
+EVO should maintain an immutable history of draft, confirmed, activated, failed, and superseded configurations. Audit events should include draft creation, game additions/removals, Cost Per Play, payout and top-prize changes, copied baselines, validation results, final acknowledgement, activation, download, ILink/EGM configuration, exceptions, recovery, and elevated support intervention.
+
+Each record should identify the actor or system process, role, charity, site, quarter, timestamp, prior configuration, resulting configuration, validation result, status, outcome, and reason where required. Configuration and audit records should be retained for at least three years from the end of the applicable quarter unless a longer retention period is approved.
+
+# 6\. Functional Areas for Requirements Development
+
+|**Functional Area**|**Requirement Focus**|
+|-|-|
+|Role-based access|Charity context, authorized sites, support/admin scope, regulator read-only access.|
+|Quarterly selection dashboard|Status model, draft readiness, blockers, next action, activation result, historical access.|
+|Game catalog and metadata|Approved title, graphics, compatibility, availability, Cost Per Play, payout, top prize, certification, effective dates.|
+|Valid configuration selection|Permitted combinations, fixed values, completeness, compatibility, limits, and availability.|
+|Draft lifecycle|Create, copy, save, revise, version, validate, supersede, and retain.|
+|Prior-quarter baseline and performance|Most recently activated configuration, closed-quarter metrics, safe information boundaries.|
+|Site-level configuration|One charity-selected site configuration with platform-managed device-specific deployment.|
+|Final validation and acknowledgement|Post-close revalidation, error correction, confirmed version, lock.|
+|One-action activation|Package resolution, deal readiness, download, ILink/EGM configuration, activation, result.|
+|Notifications and exceptions|Incomplete, invalid, unavailable, blocked, partial, failed, and recovery states.|
+|Audit and retention|Before/after configuration, actor, timestamps, status history, support actions, three-year retention.|
+|Downstream integration|Ticket Pools, ILink, EGM menu availability, reporting, quarter transition, and activation status.|
+
+# 7\. High-Level Functional Requirements
+
+The following requirements express Product direction at a level suitable for formal requirements development. They do not replace detailed metadata contracts, interface specifications, state-machine design, or acceptance criteria.
+
+## 7.1 Access and Site Context
+
+* EVO shall establish charity context from the authenticated user and display only authorized sites.
+* EVO shall provide authorized regulator users with read-only access to selection history, validation status, activation history, and audit records.
+* Elevated IGT support actions shall be permission-controlled and audited.
+
+## 7.2 Game Catalog and Metadata
+
+* EVO shall display only approved games eligible for the selected jurisdiction, site, quarter, and supported cabinet population.
+* Each catalog entry shall use approved game-package metadata for title, graphic, cabinet compatibility, Cost Per Play, payout, top prize, certification, effective dates, and availability.
+* EVO shall not expose internal technical identifiers to charity users.
+* New games and prior-quarter participation shall be clearly identified.
+
+## 7.3 Valid Configuration Selection
+
+* EVO shall permit only approved game, Cost Per Play, payout, top-prize, and cabinet-layout combinations.
+* EVO shall prevent incomplete or invalid combinations from being confirmed.
+* Fixed configuration values shall be displayed as read-only where the charity does not have a choice.
+* The selected configuration shall be associated with the applicable charity, site, regulatory quarter, and configuration version.
+
+## 7.4 Draft Creation and Revision
+
+* EVO shall allow the charity to prepare, save, return to, and revise next-quarter selections throughout the active quarter.
+* Draft changes shall not affect active-quarter gameplay or configuration.
+* EVO shall maintain version history for saved drafts.
+* The most recently saved draft shall be presented during final review.
+
+## 7.5 Prior-Quarter Baseline and Performance
+
+* EVO shall allow a draft to be created from the most recently activated site configuration.
+* Copied values shall be revalidated against current approval and availability.
+* Prior-quarter performance shall use only approved closed-quarter data.
+* Performance information shall not expose restricted active-pool or active-quarter information.
+
+## 7.6 Configuration Limits and Site Application
+
+* EVO shall enforce configured game-count, menu-capacity, cabinet-layout, site, jurisdiction, and Product limits.
+* The standard workflow shall apply one validated site configuration to all applicable IGT EGMs at the site.
+* Any device-specific technical variation required by cabinet type shall be handled by the platform without requiring terminal-by-terminal selection by the charity.
+* Copy-to-site functionality, where supported, shall validate the target site independently.
+
+## 7.7 Final Validation and Acknowledgement
+
+* EVO shall revalidate the complete saved configuration after prior-quarter close and before activation.
+* EVO shall identify missing, disabled, expired, unapproved, incompatible, or unavailable selections.
+* EVO shall prevent final acknowledgement until all configuration errors are resolved.
+* EVO shall record the charity’s final acknowledgement and the exact confirmed configuration version.
+
+## 7.8 One-Action Activation
+
+* EVO shall provide one charity-facing action to activate the confirmed next-quarter configuration.
+* EVO shall orchestrate game-package resolution, deal preparation, download, ILink configuration, EGM configuration, and activation.
+* Ticket Pools shall generate or assign initial eligible deals only for valid confirmed configurations.
+* ILink shall initialize each applicable game using the approved initial-deal model.
+* The system shall record actual activation time and per-game/per-device results.
+* The charity shall not be required to configure EGMs individually.
+
+## 7.9 Activation Exceptions and Recovery
+
+* EVO shall not represent the site as fully active until all required components report successful activation.
+* EVO shall identify affected games, packages, deals, devices, and failed steps.
+* The system shall prevent inconsistent or partially valid gameplay.
+* Recovery actions shall preserve successful completed steps where safe and shall not bypass configuration or deal validation.
+* Elevated support intervention shall be controlled and audited.
+
+## 7.10 Configuration Continuity
+
+* A configuration validly activated for the current quarter shall remain visible, reportable, and closable even if it is disabled for future selection.
+* A disabled configuration shall not be selected, downloaded, newly activated, or replenished for a future quarter unless it is re-enabled and approved.
+* Historical selection and activation records shall not be removed when availability changes.
+
+## 7.11 Audit and Retention
+
+* EVO shall retain immutable configuration versions and complete selection and activation history.
+* EVO shall audit user, system, validation, acknowledgement, download, configuration, activation, failure, and recovery events.
+* Configuration and audit records shall be retained for at least three years from the end of the applicable quarter.
+
+# 8\. Game Selection and Activation Traceability
+
+The sequence below represents the complete Product flow from active-quarter operation through next-quarter selection, prior-quarter close, final validation, activation, and historical retention.
+
+|**Workflow Stage**|**Ownership**|**Charity Activity**|**EVO / IGT Activity**|
+|-|-|-|-|
+|Current quarter active|System-controlled|Continue operating the current-quarter configuration.|Preserve active configuration, gameplay, reporting, and close state.|
+|Throughout the quarter|Charity-led|Prepare and revise next-quarter selections.|Maintain draft, validation, and change history without affecting current operation.|
+|Draft baseline|Shared|Start from the prior activated configuration where desired.|Copy and revalidate prior values against current availability.|
+|Selection|Charity-led|Choose games, Cost Per Play, payout, and top prize.|Present valid options, enforce limits, and display field-level errors.|
+|Draft save|Charity-led|Save progress.|Create a retained configuration version without initiating download or activation.|
+|Prior-quarter close|Shared with Quarterly Reporting workflow|Complete one site-level quarter-close action.|Close prior-quarter games and deals and satisfy the prior-quarter-close prerequisite for activation.|
+|Final review|Shared|Review the saved configuration and resolve errors.|Revalidate approval, availability, cabinet compatibility, and downstream readiness.|
+|Final acknowledgement|Charity-led|Confirm the intended next-quarter configuration.|Lock and retain the confirmed configuration version.|
+|Next-quarter activation|Shared / system-controlled|Select one activation action.|Prepare deals, download content, configure ILink and EGMs, and activate eligible devices.|
+|Activation result|System-controlled|Review success or exceptions.|Report status, prevent inconsistent operation, and provide a recovery path.|
+|Historical retention|System-controlled|Review prior selections where authorized.|Retain configuration, activation, and audit history.|
+
+### Workflow note
+
+Game selection preparation occurs in parallel with the current quarter. It is not limited to the 14-day transition window and does not affect active gameplay until final validation and activation.
+
+# 9\. Notifications, Exceptions, and Recovery
+
+Notifications should be tied directly to the configuration workflow and should explain what happened, why it matters, what action is required, and whether IGT support is needed.
+
+|**Notification / Exception**|**Expected Product Behavior**|
+|-|-|
+|Selection not started or incomplete|Identify missing work and provide a direct link to the affected site or selection.|
+|Saved configuration no longer valid|Identify the affected game or option, explain the reason, and provide a direct correction path.|
+|Cabinet or capacity conflict|Identify the incompatible site/device condition and prevent final confirmation until resolved.|
+|Final acknowledgement required|Present the complete validated configuration and the action required to proceed.|
+|Prior quarter not closed|Explain that activation is unavailable until the prior-quarter close completes.|
+|Deal or package readiness issue|Identify the affected configuration and whether the charity can act or IGT support is required.|
+|Download or EGM configuration failure|Show completed versus incomplete steps, affected devices, current state, and recovery path.|
+|Partial or failed activation|Do not represent the site as fully active; prevent inconsistent operation and escalate as required.|
+
+# 10\. Key Product Principles
+
+|**Principle**|**Product Direction**|
+|-|-|
+|Simple for the charity|Use visual selection, guided validation, saved drafts, one final acknowledgement, and one activation action.|
+|Charity decides; platform executes|The charity selects the business configuration while EVO, Ticket Pools, ILink, and EGMs perform technical execution.|
+|Valid options only|Show only approved, enabled, certified, compatible, and available configuration choices.|
+|No technical burden|Do not require the charity to understand Math Definition Files, game-form IDs, paytable IDs, deal generation, or device deployment.|
+|Quarter-based workflow|Draft preparation can occur throughout the quarter; activation occurs only through the governed quarter-transition workflow.|
+|Site-level simplicity|The charity selects one site configuration; the platform manages device-specific technical deployment.|
+|Configuration continuity|Active-quarter configurations remain reportable and closable even if disabled for future use.|
+|Safe decision support|Use only approved closed-quarter performance information and never expose restricted active-pool data.|
+|Audit-ready|Every draft, validation, acknowledgement, activation, exception, recovery, and support action is traceable.|
+|Do not copy competitors|Market examples inform workflow patterns only; IGT uses its own design, content, and assets.|
+
+# 11\. Decisions Required Before Requirements Finalization
+
+|**Decision Area**|**Decision Needed**|**Recommended Owner**|
+|-|-|-|
+|Game package metadata contract|Define required metadata for catalog display, valid options, graphics, layouts, certification, effective dates, availability, and brochure content.|Product / Architecture / Studio / Compliance|
+|Cost Per Play and payout behavior|Confirm multiple Cost Per Play support, apply-to-all payout behavior, and Cost Per Play-specific payout selection.|Product / Compliance / Studio|
+|Variable top-prize exposure|Confirm MVP support and fixed/read-only presentation behavior.|Product / Compliance / Studio|
+|Game-count and menu-capacity rules|Confirm governing limits by site, cabinet, layout, jurisdiction, and Product configuration.|Product / Architecture / ILink|
+|Prior-quarter performance metric|Confirm approved metric and calculation definition.|Product / Reporting / Compliance|
+|Copy-between-site scope|Confirm MVP versus future support and target-site validation behavior.|Product / Architecture|
+|Site-level deployment model|Confirm one site selection with platform-managed cabinet-specific deployment.|Product / ILink / Architecture / Compliance|
+|Activation prerequisites and orchestration|Confirm complete prerequisites after prior-quarter close, final validation, acknowledgement, deal readiness, and site readiness.|Product / Architecture / ILink / Ticket Pools|
+|Configuration lock behavior|Confirm when editing stops, how a confirmed configuration is superseded, and who may reopen it.|Product / Compliance / Requirements|
+|Partial activation handling|Confirm allowed partial states, user messaging, blocked operation, and recovery.|Product / ILink / Operations|
+|Activation recovery authorization|Confirm automatic retry versus elevated IGT support or Compliance approval.|Product / Operations / Compliance|
+|Regulator visibility|Confirm access to upcoming selections, validation history, activation results, and audit.|Compliance / Product|
+|Retention|Confirm whether configuration or audit records require more than three years.|Compliance / Legal / Product|
+
+# 12\. Out of Scope for This Brief
+
+* Final formal business requirements, system requirements, and acceptance criteria.
+* Pixel-level UX wireframes, exact visual layouts, and final design-system specifications.
+* Detailed game math, Math Definition File schema, paytable expansion, or certification package.
+* Detailed deal generation, eligibility, initial-load, replenishment, commingling, and inventory state-machine behavior, except for dependencies required to validate and activate a selected configuration.
+* Detailed ILink and EGM protocol, API, event-contract, and transport design.
+* Detailed quarterly reporting and quarter-close workflow behavior, except for the prior-quarter-close prerequisite and activation handoff defined in this brief.
+* Retailer Portal and Mobile Validator functionality.
+* Automated game recommendation algorithms beyond approved prior-quarter performance display.
+* Tax-form completion, filing, or payment workflow.
+* Commercial pricing, revenue model, contracting, and regulatory submission evidence.
+* Copying competitor branding, artwork, brochures, game names, or screen layouts.
+
+# 13\. Requirements Team Handoff Notes
+
+The Requirements team should use this brief to define:
+
+1. Who can perform each action and for which charity, site, quarter, and role.
+2. What metadata drives catalog content, valid options, availability, compatibility, and effective dates.
+3. How draft configurations are created, copied, saved, versioned, validated, superseded, and retained.
+4. What game-count, menu-capacity, cabinet-layout, and site limits apply.
+5. How prior-quarter performance is defined, calculated, sourced, and restricted to closed-quarter information.
+6. How one charity-selected site configuration is translated into device-specific technical deployment.
+7. What validation occurs during draft save, final review, acknowledgement, and activation.
+8. How prior-quarter close, the 14-day transition window, and next-quarter activation are related.
+9. How the confirmed selection resolves to approved game packages, Math Definition Files, and initial eligible deals.
+10. How one Activate Next Quarter action orchestrates Ticket Pools, downloads, ILink, EGMs, status reporting, and audit.
+11. How partial, blocked, or failed activation is represented and recovered.
+12. How active-quarter configurations remain reportable and closable when disabled for future selection.
+13. How notifications distinguish charity-resolvable issues from IGT support or regulator-controlled conditions.
+14. What configuration, activation, and support events are audited and retained.
+15. What authorized regulators may review.
+
+The Requirements team should flag assumptions requiring SME confirmation before baselining and route unresolved Product, Compliance, Studio, Architecture, Ticket Pools, EVO, ILink, Reporting, Operations, or regulator questions through the appropriate governance process.
+
